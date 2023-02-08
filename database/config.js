@@ -4,8 +4,8 @@ const dbConnection = async() => {
 
     try {
         mongoose.set('strictQuery', false);
-        await mongoose.connect('mongodb+srv://mean_user_colec:IninCqUTUn7401iF@cluster0.b1wx4.mongodb.net/test?tlsInsecure=true');
-        // await mongoose.connect('mongodb+srv://mean_user_colec:IninCqUTUn7401iF@cluster0.b1wx4.mongodb.net/test?tls=true&tlsInsecure=true&tlsCertificateKeyFile=C%3A%5Cmongosh%5Cbin%5Cdevice1.includesprivatekey.pem');
+        await mongoose.connect(process.env.DB_CNN_HOME);
+        // await mongoose.connect(process.env.DB_CNN);
 
         console.log('BD Online');
     } catch (error) {
