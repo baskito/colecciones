@@ -18,7 +18,6 @@ const getUsuarios = async(req, res) => {
         Usuario.countDocuments()
     ]);
 
-
     res.json({
         ok: true,
         usuarios,
@@ -44,10 +43,10 @@ const crearUsuario = async(req, res = response) => {
 
         const usuario = new Usuario( req.body );
     
-        // // Encriptar contraseña
-        // const salt = bcrypt.genSaltSync();
-        // usuario.password = bcrypt.hashSync( password, salt );
-    
+        // Encriptar contraseña
+        const salt = bcrypt.genSaltSync();
+        usuario.password = bcrypt.hashSync( password, salt );
+        
     
         // Guardar usuario
         await usuario.save();
@@ -107,6 +106,7 @@ const actualizarUsuario = async (req, res = response) => {
             }
         }
         
+        campos.email = email;
         if ( !usuarioDB.google ){
             campos.email = email;
         } else if ( usuarioDB.email !== email ) {
