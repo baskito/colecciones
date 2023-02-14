@@ -1,8 +1,9 @@
 const Usuario = require('../models/usuario');
 const fs = require('fs');
 
-const Medico = require('../models/medico');
-const Hospital = require('../models/hospital');
+const Console = require('../models/console');
+const Accesorio = require('../models/accesorio');
+const Collection = require('../models/collection');
 
 const borrarImagen = ( path ) => {
     if ( fs.existsSync( path ) ) {
@@ -11,40 +12,103 @@ const borrarImagen = ( path ) => {
     }
 }
 
+// var serveIndex = require('serve-index');
+// app.use(express.static(__dirname + '/'))
+// app.use('/uploads', serveIndex(__dirname + '/uploads'));
 
-const actualizarImagen = async(tipo, id, nombreArchivo) => {
+const actualizarImagen = async(tipo, id, nombreArchivo, numero = 1) => {
 
     let pathViejo = '';
-    
+    const num = parseInt(numero);
     switch( tipo ) {
-        case 'medicos':
-            const medico = await Medico.findById(id);
-            if ( !medico ) {
-                console.log('No es un médico por id');
+        case 'consoles':
+            const console = await Console.findById(id);
+            
+            if ( !console ) {
+                console.log('No es una consola por id');
                 return false;
             }
+            switch( num ) {
+                case 1:
+                    pathViejo = `./uploads/consoles/${ console.img1 }`;
+                    console.img1 = nombreArchivo;
+                    break;
+                    
+                case 2:
+                    pathViejo = `./uploads/consoles/${ console.img2 }`;
+                    console.img2 = nombreArchivo;
+                    break;
+                    
+                case 3:
+                    pathViejo = `./uploads/consoles/${ console.img3 }`;
+                    console.img3 = nombreArchivo;
+                    break;
 
-            pathViejo = `./uploads/medicos/${ medico.img }`;
+            }
             borrarImagen( pathViejo );
-
-            medico.img = nombreArchivo;
-            await medico.save();
+            await console.save();
             return true;
 
         break;
         
-        case 'hospitales':
-            const hospital = await Hospital.findById(id);
-            if ( !hospital ) {
-                console.log('No es un hospital por id');
+        case 'accesorios':
+            const accesorio = await Accesorio.findById(id);
+            if ( !accesorio ) {
+                console.log('No es un accesorio por id');
                 return false;
             }
 
-            pathViejo = `./uploads/hospitales/${ hospital.img }`;
+            switch( num ) {
+                case 1:
+                    pathViejo = `./uploads/accesorios/${ accesorio.img1 }`;
+                    accesorio.img1 = nombreArchivo;
+                    break;
+                    
+                case 2:
+                    pathViejo = `./uploads/accesorios/${ accesorio.img2 }`;
+                    accesorio.img2 = nombreArchivo;
+                    break;
+                    
+                case 3:
+                    pathViejo = `./uploads/accesorios/${ accesorio.img3 }`;
+                    accesorio.img3 = nombreArchivo;
+                    break;
+
+            }
             borrarImagen( pathViejo );
 
-            hospital.img = nombreArchivo;
-            await hospital.save();
+            await accesorio.save();
+            return true;
+
+        break;
+
+        case 'collections':
+            const collection = await Collection.findById(id);
+            if ( !collection ) {
+                console.log('No es una colección por id');
+                return false;
+            }
+
+            switch( num ) {
+                case 1:
+                    pathViejo = `./uploads/collections/${ collection.img1 }`;
+                    collection.img1 = nombreArchivo;
+                    break;
+                    
+                case 2:
+                    pathViejo = `./uploads/collections/${ collection.img2 }`;
+                    collection.img2 = nombreArchivo;
+                    break;
+                    
+                case 3:
+                    pathViejo = `./uploads/collections/${ collection.img3 }`;
+                    collection.img3 = nombreArchivo;
+                    break;
+
+            }
+            borrarImagen( pathViejo );
+
+            await collection.save();
             return true;
 
         break;
@@ -57,7 +121,7 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
                 return false;
             }
 
-            pathViejo = `./uploads/hospitales/${ usuario.img }`;
+            pathViejo = `./uploads/usuarios/${ usuario.img }`;
             borrarImagen( pathViejo );
 
             usuario.img = nombreArchivo;
@@ -66,8 +130,7 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
 
         break;
     }
-
-
+    
 }
 
 

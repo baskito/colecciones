@@ -18,7 +18,13 @@ app.use( express.json() );
 dbConnection();
 
 // Rutas
-app.use( '/api/usuarios', require('./routes/usuarios') );
+app.use( '/api/usuarios', require('./routes/usuario') );
+app.use( '/api/login', require('./routes/auth') );
+app.use( '/api/consoles', require('./routes/console') );
+app.use( '/api/accesorios', require('./routes/accesorio') );
+app.use( '/api/collections', require('./routes/collection') );
+app.use( '/api/search', require('./routes/search') );
+app.use( '/api/upload', require('./routes/upload') );
 
 app.listen( process.env.PORT, () => {
   console.log('Servidor corriendo en puerto ' + process.env.PORT );

@@ -7,12 +7,12 @@ const { generarJWT } = require('../helpers/jwt');
 
 const getUsuarios = async(req, res) => {
 
-    const desde = Number(req.query.desde) || 0;
+    const from = Number(req.query.from) || 0;
 
     const [ usuarios, total ] = await Promise.all([
         Usuario
             .find({}, 'nombre email role google img')
-            .skip( desde )
+            .skip( from )
             .limit( 5 ),
 
         Usuario.countDocuments()
@@ -51,14 +51,14 @@ const crearUsuario = async(req, res = response) => {
         // Guardar usuario
         await usuario.save();
 
-        // // Generar el TOKEN - JWT
-        // const token = await generarJWT( usuario.id );
+        // Generar el TOKEN - JWT
+        const token = await generarJWT( usuario.id );
 
 
         res.json({
             ok: true,
-            usuario
-            // token
+            usuario,
+            token
         });
 
 
@@ -106,7 +106,6 @@ const actualizarUsuario = async (req, res = response) => {
             }
         }
         
-        campos.email = email;
         if ( !usuarioDB.google ){
             campos.email = email;
         } else if ( usuarioDB.email !== email ) {
@@ -141,7 +140,7 @@ const borrarUsuario = async(req, res = response ) => {
 
     try {
 
-        const usuarioDB = await Usuario.findById( uid );
+        let usuarioDB = await Usuario.findById( uid );
 
         if ( !usuarioDB ) {
             return res.status(404).json({
@@ -150,12 +149,22 @@ const borrarUsuario = async(req, res = response ) => {
             });
         }
 
-        await Usuario.findByIdAndDelete( uid );
+        if ( !usuarioDB.estado ) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'El usuario ya está dado de baja'
+            });
+        }
 
+        // En vez de borrar desactivamos el usuario
+        // await Usuario.findByIdAndDelete( uid );
+        usuarioDB.estado = false;
+        const usuarioDadoBaja = await Usuario.findByIdAndUpdate( uid, usuarioDB, { new: true } );
         
         res.json({
             ok: true,
-            msg: 'Usuario eliminado'
+            msg: 'Usuario eliminado',
+            usuarioDadoBaja
         });
 
     } catch (error) {
@@ -171,11 +180,52 @@ const borrarUsuario = async(req, res = response ) => {
 
 }
 
+const activarUsuario = async(req, res = response ) => {
+    const uid = req.params.id;
+
+    try {
+
+        let usuarioDB = await Usuario.findById( uid );
+
+        if ( !usuarioDB ) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe un usuario con ese id'
+            });
+        }
+
+        if ( usuarioDB.estado ) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'El usuario ya está activo'
+            });
+        }
+
+        usuarioDB.estado = true;
+        const usuarioActivado = await Usuario.findByIdAndUpdate( uid, usuarioDB, { new: true } );
+        
+        res.json({
+            ok: true,
+            msg: 'Usuario activado con éxito',
+            usuarioActivado
+        });
+
+    } catch (error) {
+        
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+
+    }
+}
 
 
 module.exports = {
     getUsuarios,
     crearUsuario,
     actualizarUsuario,
-    borrarUsuario
+    borrarUsuario,
+    activarUsuario
 }

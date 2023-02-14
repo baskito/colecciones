@@ -27,6 +27,10 @@ const UsuarioSchema = Schema({
         type: Boolean,
         default: false
     },
+    estado: {
+        type: Boolean,
+        default: true
+    }
 });
 
 
@@ -34,7 +38,7 @@ UsuarioSchema.method('toJSON', function() {
     const { __v, _id, password, ...object } = this.toObject();
     object.uid = _id;
     return object;
-})
+});
 
 
 
