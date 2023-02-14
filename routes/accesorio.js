@@ -33,7 +33,12 @@ router.post( '/',
 
 router.put( '/:id',
     [
-        
+        validarJWT,
+        check('name', 'El nombre del accesorio es obligatorio').not().isEmpty(),
+        check('model', 'El modelo del accesorio es obligatorio').not().isEmpty(),
+        check('brand', 'La marca del accesorio es obligatoria').not().isEmpty(),
+        check('console', 'El id de la consola tiene que ser válido').isMongoId(),
+        validarCampos
     ],
     updateAccesorio
 );

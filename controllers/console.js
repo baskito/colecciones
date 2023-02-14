@@ -1,4 +1,5 @@
 const { response } = require('express');
+const { findOne } = require('../models/console');
 const Console = require('../models/console');
 
 const getConsole = async (req, res = response) => {
@@ -22,11 +23,40 @@ const getConsole = async (req, res = response) => {
     });
 }
 
-const updateConsole = (req, res = response) => {
-    res.json({
-        ok: true,
-        msg: 'actualizarConsole'
-    });
+const updateConsole = async (req, res = response) => {
+
+    const id = req.params.id;
+    const uid = req.uid;
+
+    try {
+
+        const console = await Console.findById( id );
+
+        if (!console) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Consola no encontrada por id'
+            });
+        }
+
+        const newConsole = {
+            ...req.body,
+            usuario: uid
+        }
+
+        const consoleDB = await Console.findByIdAndUpdate( id, newConsole, { new: true });
+
+        res.json({
+            ok: true,
+            console: consoleDB
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error en el servidor, consulte con le administrador'
+        });
+    }
 }
 
 const createConsole = async (req, res = response) => {
@@ -56,11 +86,34 @@ const createConsole = async (req, res = response) => {
     }
 }
 
-const deleteConsole = (req, res = response) => {
-    res.json({
-        ok: true,
-        msg: 'getConsoles'
-    });
+const deleteConsole = async (req, res = response) => {
+
+    const id = req.params.id;
+
+    try {
+
+        const console = await Console.findById( id );
+
+        if (!console) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Consola no encontrada por id'
+            });
+        }
+
+        await Console.findByIdAndDelete( id );
+
+        res.json({
+            ok: true,
+            msg: 'Conosla eliminada'
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error en el servidor, consulte con le administrador'
+        });
+    }
 }
 
 

@@ -32,7 +32,9 @@ router.post( '/',
 
 router.put( '/:id',
     [
-        
+        validarJWT,
+        check('name', 'El nombre de la consola es obligatorio').not().isEmpty(),
+        validarCampos
     ],
     updateConsole
 );
@@ -40,6 +42,7 @@ router.put( '/:id',
 
 
 router.delete( '/:id',
+    validarJWT,
     deleteConsole
 );
 

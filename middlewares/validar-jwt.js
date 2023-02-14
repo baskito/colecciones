@@ -39,16 +39,17 @@ const varlidarADMIN_ROLE = async(req, res, next)  => {
         
         const usuarioDB = await Usuario.findById(uid);
 
+
         if ( !usuarioDB ) {
             return res.status(404).json({
                 ok: false,
                 msg: 'Usuario no existe'
             });
         }
-
         if ( usuarioDB.role !== 'ADMIN_ROLE' ) {
             return res.status(403).json({
                 ok: false,
+                role: usuarioDB.role,
                 msg: 'No tiene privilegios para hacer eso'
             });
         }
