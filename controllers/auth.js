@@ -63,52 +63,62 @@ const login = async( req, res = response ) => {
 const googleSignIn = async( req, res = response ) => {
 
     const googleToken = req.body.token;
-    console.log(googleToken);
 
-    try {
-
-        const { name, email, picture } = await googleVerify( googleToken );
-        console.log(email);
-
-        const usuarioDB = await Usuario.findOne({ email });
-        let usuario;
-
-        if ( !usuarioDB ) {
-            // si no existe el usuario
-            usuario = new Usuario({
-                nombre: name,
-                email,
-                password: '@@@',
-                img: picture,
-                google: true
-            });
-        } else {
-            // existe usuario
-            usuario = usuarioDB;
-            usuario.google = true;
-        }
-
-        // Guardar en DB
-        await usuario.save();
-
-        // Generar el TOKEN - JWT
-        const token = await generarJWT( usuario.id );
-        
-        res.json({
-            ok: true,
-            email, name, picture,
-            token,
-            // menu: getMenuFrontEnd( usuario.role )
+    const googleUser = await googleVerify( googleToken )
+        .catch((err) => {
+            console.log(err);
+            return;
         });
-
-    } catch (error) {
-        
-        res.status(401).json({
+        // const { name, email, picture } = await googleVerify( googleToken );
+        // console.log(email);
+ 
+    if ( googleUser === undefined ) {
+        return res.status(403).json({
             ok: false,
-            msg: 'Token no es correcto',
-            error
-            // error: googleVerify(googleToken).catch(console.error)
+            msg: 'Token no válido'
         });
+    } else {
+        const { name, email, picture } = googleUser;
+        try {
+            const usuarioDB = await Usuario.findOne({ email });
+            let usuario;
+
+            if ( !usuarioDB ) {
+                // si no existe el usuario
+                usuario = new Usuario({
+                    nombre: name,
+                    email,
+                    password: '@@@',
+                    img: picture,
+                    google: true
+                });
+            } else {
+                // existe usuario
+                usuario = usuarioDB;
+                usuario.google = true;
+            }
+
+            // Guardar en DB
+            await usuario.save();
+
+            // Generar el TOKEN - JWT
+            const token = await generarJWT( usuario.id );
+            
+            res.json({
+                ok: true,
+                email, name, picture,
+                token,
+                // menu: getMenuFrontEnd( usuario.role )
+            });
+
+        } catch (error) {
+            
+            res.status(401).json({
+                ok: false,
+                msg: 'Token no es correcto',
+                error
+            });
+        }
     }
 
 }
