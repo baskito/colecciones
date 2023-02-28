@@ -2,6 +2,7 @@ const { response } = require('express');
 const Console = require('../models/console');
 const Accesorio = require('../models/accesorio');
 const Collection = require('../models/collection');
+const Usuario = require('../models/usuario');
 
 const getSearchItem = async (req, res = response) => {
 
@@ -47,8 +48,21 @@ const getSearchFromCollection = async (req, res = response) => {
     const regExp = new RegExp( itemBusqueda.toString(), 'i');
     const from = Number(req.query.from) || 0;
     let data = [];
+    let total = 0;
 
     switch ( tablaBusqueda ) {
+
+        case 'usuarios':
+            [ data, total ] = await Promise.all([
+                data = Usuario.find({$or:[ 
+                    {nombre: regExp},
+                    {email: regExp}
+                ]}),
+        
+                Usuario.countDocuments()
+            ]);
+        break;
+
         case 'consoles':
             data = await Console.find({$or:[ 
                 {name: regExp},
@@ -92,7 +106,9 @@ const getSearchFromCollection = async (req, res = response) => {
 
     res.json({
         ok: true,
-        results: data
+        results: data,
+        totalSearch: data.length,
+        total
     });
 }
 
