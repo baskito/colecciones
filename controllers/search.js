@@ -49,6 +49,7 @@ const getSearchFromCollection = async (req, res = response) => {
     const from = Number(req.query.from) || 0;
     let data = [];
     let total = 0;
+    const uid = req.uid;
 
     switch ( tablaBusqueda ) {
 
@@ -59,7 +60,7 @@ const getSearchFromCollection = async (req, res = response) => {
                     {email: regExp}
                 ]}),
         
-                Usuario.countDocuments()
+                total = data = Usuario.find()
             ]);
         break;
 
@@ -87,13 +88,16 @@ const getSearchFromCollection = async (req, res = response) => {
         break;
 
         case 'collections':
-            data = await Collection.find({$or:[ 
-                {name: regExp},
-                {tipology: regExp},
-                {editorial: regExp} 
-            ]}).populate('usuario', 'nombre email img')
-            .skip( from )
-            .limit( 10 );
+            [ data, total ] = await Promise.all([
+                Collection.find({usuario: uid, $or:[ 
+                    {name: regExp},
+                    {tipology: regExp},
+                    {editorial: regExp} 
+                ]}).populate('usuario', 'nombre email img'),
+
+                Collection.find({usuario: uid})
+
+            ]);
         break;
 
         default:
@@ -108,7 +112,7 @@ const getSearchFromCollection = async (req, res = response) => {
         ok: true,
         results: data,
         totalSearch: data.length,
-        total
+        total: total.length
     });
 }
 

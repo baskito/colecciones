@@ -10,6 +10,10 @@ const fileUpload = (req, res = response ) => {
     const tipo = req.params.tipo;
     const id = req.params.id;
     const numero = req.params.numero;
+    console.log(tipo);
+    console.log(id);
+    console.log(numero);
+    console.log(req.files);
 
     // Validar tipo
     const tiposValidos = ['usuarios', 'consoles', 'accesorios', 'collections'];
@@ -48,16 +52,17 @@ const fileUpload = (req, res = response ) => {
     const nombreArchivo = `${ uuidv4() }.${ extensionArchivo }`;
 
     // Path para guardar la imagen
-    const path = `./uploads/${ tipo }/${ nombreArchivo }`;
-
+    const path = `./uploads/${ tipo }/${ numero }/${ nombreArchivo }`;
+    console.log(path);
     // Mover la imagen
     file.mv( path , (err) => {
         if (err){
             console.log(err)
-            return res.status(500).json({
+            res.status(500).json({
                 ok: false,
                 msg: 'Error al mover la imagen'
             });
+            return;
         }
 
         // Actualizar base de datos
@@ -75,9 +80,9 @@ const getImage = (req, res = response ) => {
 
     const tipo = req.params.tipo;
     const foto = req.params.image;
+    const numero = req.params.numero;
 
-    const pathImg = path.join( __dirname, `../uploads/${ tipo }/${ foto }` );
-
+    const pathImg = path.join( __dirname, `../uploads/${ tipo }/${ numero }/${ foto }` );
     // imagen por defecto
     if ( fs.existsSync( pathImg ) ) {
         res.sendFile( pathImg );

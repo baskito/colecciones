@@ -16,7 +16,7 @@ const borrarImagen = ( path ) => {
 // app.use(express.static(__dirname + '/'))
 // app.use('/uploads', serveIndex(__dirname + '/uploads'));
 
-const actualizarImagen = async(tipo, id, nombreArchivo, numero = 1) => {
+const actualizarImagen = async(tipo, id, nombreArchivo, numero = '1') => {
 
     let pathViejo = '';
     const num = parseInt(numero);
@@ -88,20 +88,20 @@ const actualizarImagen = async(tipo, id, nombreArchivo, numero = 1) => {
                 console.log('No es una colección por id');
                 return false;
             }
-
+            
             switch( num ) {
                 case 1:
-                    pathViejo = `./uploads/collections/${ collection.img1 }`;
+                    pathViejo = `./uploads/collections/${ num }/${ collection.img1 }`;
                     collection.img1 = nombreArchivo;
                     break;
                     
                 case 2:
-                    pathViejo = `./uploads/collections/${ collection.img2 }`;
+                    pathViejo = `./uploads/collections/${ num }/${ collection.img2 }`;
                     collection.img2 = nombreArchivo;
                     break;
                     
                 case 3:
-                    pathViejo = `./uploads/collections/${ collection.img3 }`;
+                    pathViejo = `./uploads/collections/${ num }/${ collection.img3 }`;
                     collection.img3 = nombreArchivo;
                     break;
 
@@ -121,7 +121,7 @@ const actualizarImagen = async(tipo, id, nombreArchivo, numero = 1) => {
                 return false;
             }
 
-            pathViejo = `./uploads/usuarios/${ usuario.img }`;
+            pathViejo = `./uploads/usuarios/1/${ usuario.img }`;
             borrarImagen( pathViejo );
 
             usuario.img = nombreArchivo;

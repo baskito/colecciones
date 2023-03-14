@@ -21,7 +21,7 @@ const AccesorioSchema = Schema({
         type: String
     },
     year: {
-        type: Date
+        type: String
     },
     releasePrice: {
         type: Number
@@ -45,7 +45,8 @@ const AccesorioSchema = Schema({
         type: String,
     },
     sold: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     saleDate: {
         type: Date,

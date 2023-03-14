@@ -1,24 +1,62 @@
 const { response } = require('express');
+const ObjectID = require("mongodb").ObjectId;
 const Collection = require('../models/collection');
 
 const getCollection = async (req, res = response) => {
 
     const from = Number(req.query.from) || 0;
+    const uid = req.uid;
 
-    const [ collection, total ] = await Promise.all([
-        Collection.find()
+    const [ collections, total ] = await Promise.all([
+            Collection.find({usuario: uid})
             .populate('usuario', 'nombre email img')
             .skip( from )
-            .limit( 5 ),
+            .limit( 10 ),
 
-        Collection.countDocuments()
+            Collection.find({usuario: uid})
+
     ]);
 
     res.json({
         ok: true,
-        collection,
-        total
+        collections,
+        total: total.length
     });
+}
+
+const getCollectionOne = async (req, res = response) => {
+
+    const id = req.params.id;
+
+    try {
+
+        if (!ObjectID.isValid(id)) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'La id de la colección no es válida'
+            });
+        }
+
+        const collection = await Collection.findById( id );
+        
+        if (!collection) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Colección no encontrada por id'
+            });
+        }
+
+        res.json({
+            ok: true,
+            collection
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error en el servidor, consulte con le administrador'
+        });
+    }
 }
 
 const updateCollection = async (req, res = response) => {
@@ -29,6 +67,13 @@ const updateCollection = async (req, res = response) => {
     try {
 
         const collection = await Collection.findById( id );
+
+        if (!ObjectID.isValid(id)) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'La id de la colección no es válida'
+            });
+        }
 
         if (!collection) {
             return res.status(404).json({
@@ -41,6 +86,7 @@ const updateCollection = async (req, res = response) => {
             ...req.body,
             usuario: uid
         }
+    
 
         const collectionDB = await Collection.findByIdAndUpdate( id, newCollection, { new: true });
 
@@ -118,5 +164,6 @@ module.exports = {
     getCollection,
     updateCollection,
     createCollection,
-    deleteCollection
+    deleteCollection,
+    getCollectionOne
 }
