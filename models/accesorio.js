@@ -17,6 +17,9 @@ const AccesorioSchema = Schema({
     tipology: {
         type: String
     },
+    color: {
+        type: String
+    },
     description: {
         type: String
     },
@@ -76,8 +79,7 @@ const AccesorioSchema = Schema({
     },
     console: {
         type: Schema.Types.ObjectId,
-        ref: 'Console',
-        required: true
+        ref: 'Console'
     }
 });
 

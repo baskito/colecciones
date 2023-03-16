@@ -1,6 +1,6 @@
 const { response } = require('express');
-const { findOne } = require('../models/console');
 const Console = require('../models/console');
+const ObjectID = require("mongodb").ObjectId;
 
 const getConsole = async (req, res = response) => {
 
@@ -23,6 +23,21 @@ const getConsole = async (req, res = response) => {
     });
 }
 
+const getConsoleAcc = async (req, res = response) => {
+
+    const uid = req.uid;
+
+    const consoles = await Console
+            .find({usuario: uid})
+            .populate('usuario', 'nombre email img');
+
+    res.json({
+        ok: true,
+        consoles,
+        total: consoles.length
+    });
+}
+
 const updateConsole = async (req, res = response) => {
 
     const id = req.params.id;
@@ -31,7 +46,6 @@ const updateConsole = async (req, res = response) => {
     try {
 
         const console = await Console.findById( id );
-
         if (!console) {
             return res.status(404).json({
                 ok: false,
@@ -43,7 +57,6 @@ const updateConsole = async (req, res = response) => {
             ...req.body,
             usuario: uid
         }
-
         const consoleDB = await Console.findByIdAndUpdate( id, newConsole, { new: true });
 
         res.json({
@@ -119,6 +132,7 @@ const deleteConsole = async (req, res = response) => {
 
 module.exports = {
     getConsole,
+    getConsoleAcc,
     updateConsole,
     createConsole,
     deleteConsole

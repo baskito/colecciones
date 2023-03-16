@@ -17,6 +17,9 @@ const ConsoleSchema = Schema({
     tipology: {
         type: String
     },
+    color: {
+        type: String
+    },
     generation: {
         type: String
     },

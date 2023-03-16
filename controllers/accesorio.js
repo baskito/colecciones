@@ -81,6 +81,16 @@ const updateAccesorio = async (req, res = response) => {
             usuario: uid
         }
 
+        if (newAccesorio.console) {
+            if (!ObjectID.isValid(newAccesorio.console)) {
+                return res.status(404).json({
+                    ok: false,
+                    msg: 'El id de la consola no es válido'
+                });
+            }
+        }
+
+
         const accesorioDB = await Accesorio.findByIdAndUpdate( id, newAccesorio, { new: true });
 
         res.json({
@@ -103,6 +113,15 @@ const createAccesorio = async (req, res = response) => {
         usuario: uid,
         ...req.body
     }); 
+
+    if (accesorio.console) {
+        if (!ObjectID.isValid(accesorio.console)) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'El id de la consola no es válido'
+            });
+        }
+    }
 
     try {
   

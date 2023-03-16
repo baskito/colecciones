@@ -27,7 +27,7 @@ router.post( '/',
         check('name', 'El nombre del accesorio es obligatorio').not().isEmpty(),
         check('model', 'El modelo del accesorio es obligatorio').not().isEmpty(),
         check('brand', 'La marca del accesorio es obligatoria').not().isEmpty(),
-        check('console', 'El id de la consola tiene que ser válido').isMongoId(),
+        // check('console', 'El id de la consola tiene que ser válido').isMongoId(),
         validarCampos
     ], 
     createAccesorio 
@@ -39,7 +39,7 @@ router.put( '/:id',
         check('name', 'El nombre del accesorio es obligatorio').not().isEmpty(),
         check('model', 'El modelo del accesorio es obligatorio').not().isEmpty(),
         check('brand', 'La marca del accesorio es obligatoria').not().isEmpty(),
-        check('console', 'El id de la consola tiene que ser válido').isMongoId(),
+        // check('console', 'El id de la consola tiene que ser válido').isMongoId(),
         validarCampos
     ],
     updateAccesorio

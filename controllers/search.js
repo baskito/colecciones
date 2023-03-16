@@ -15,13 +15,16 @@ const getSearchItem = async (req, res = response) => {
             {name: regExp},
             {model: regExp},
             {tipology: regExp},
-            {brand: regExp} 
+            {brand: regExp},
+            {tipology: regExp} 
         ]}).populate('usuario', 'nombre email img'),
         Accesorio.find({$or:[ 
             {name: regExp},
             {model: regExp},
             {tipology: regExp},
-            {brand: regExp} 
+            {brand: regExp},
+            {tipology: regExp},
+            {console: regExp}
         ]}).populate('usuario', 'nombre email img')
         .populate('console', 'name model brand img1'),
         Collection.find({$or:[ 
@@ -69,7 +72,8 @@ const getSearchFromCollection = async (req, res = response) => {
                 {name: regExp},
                 {model: regExp},
                 {tipology: regExp},
-                {brand: regExp} 
+                {brand: regExp},
+                {tipology: regExp} 
             ]}).populate('usuario', 'nombre email img')
             .skip( from )
             .limit( 10 );
