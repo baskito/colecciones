@@ -1,23 +1,12 @@
 const { Schema, model } = require('mongoose');
 
-const AccesorioSchema = Schema({
+const GameSchema = Schema({
 
     name: {
         type: String,
         required: true
     },
-    model: {
-        type: String,
-        required: true,
-    },
-    brand: {
-        type: String,
-        required: true,
-    },
-    tipology: {
-        type: String
-    },
-    color: {
+    genre: {
         type: String
     },
     description: {
@@ -80,6 +69,14 @@ const AccesorioSchema = Schema({
         ref: 'Usuario',
         required: true
     },
+    brand: {
+        type: Schema.Types.ObjectId,
+        ref: 'Brand'
+    },
+    platform: {
+        type: Schema.Types.ObjectId,
+        ref: 'Platform',
+    },
     console: {
         type: Schema.Types.ObjectId,
         ref: 'Console'
@@ -87,9 +84,9 @@ const AccesorioSchema = Schema({
 });
 
 
-AccesorioSchema.method('toJSON', function() {
+GameSchema.method('toJSON', function() {
     const { __v, ...object } = this.toObject();
     return object;
 });
 
-module.exports = model( 'Accesorio', AccesorioSchema );
+module.exports = model( 'Game', GameSchema );

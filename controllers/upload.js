@@ -16,12 +16,12 @@ const fileUpload = (req, res = response ) => {
     console.log(req.files);
 
     // Validar tipo
-    const tiposValidos = ['usuarios', 'consoles', 'accesorios', 'collections'];
+    const tiposValidos = ['usuarios', 'consoles', 'accesorios', 'collections', 'brands', 'platforms', 'games'];
 
     if (!tiposValidos.includes(tipo)) {
         return res.status(400).json({
             ok: false,
-            msg: 'No es un usuario, console, accesorio o collection'
+            msg: 'No es un tipo válido aceptado'
         });
     }
 

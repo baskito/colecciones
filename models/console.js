@@ -44,6 +44,9 @@ const ConsoleSchema = Schema({
     serialNumber: {
         type: String
     },
+    estimatedValue: {
+        type: Number,
+    },
     purchaseDate: {
         type: Date
     },
