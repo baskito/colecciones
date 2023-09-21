@@ -10,8 +10,6 @@ const getGame = async (req, res = response) => {
     const [ games, total ] = await Promise.all([
         Game.find({usuario: uid})
             .populate('usuario', 'nombre email img')
-            .populate('brand', 'name country year logo')
-            .populate('platform', 'name year generation logo')
             .populate('console', 'name model brand img1')
             .skip( from )
             .limit( 10 ),

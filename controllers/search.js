@@ -91,6 +91,18 @@ const getSearchFromCollection = async (req, res = response) => {
             .limit( 10 );
         break;
 
+        case 'games':
+            data = await Game.find({$or:[ 
+                {name: regExp},
+                {genre: regExp},
+                {editorial: regExp},
+                {platform: regExp} 
+            ]}).populate('usuario', 'nombre email img')
+            .populate('console', 'name model brand img1')
+            .skip( from )
+            .limit( 10 );
+        break;
+
         case 'collections':
             [ data, total ] = await Promise.all([
                 Collection.find({usuario: uid, $or:[ 

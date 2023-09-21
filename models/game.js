@@ -9,10 +9,16 @@ const GameSchema = Schema({
     genre: {
         type: String
     },
-    description: {
+    editorial: {
+        type: String
+    },
+    platform: {
         type: String
     },
     year: {
+        type: String
+    },
+    description: {
         type: String
     },
     releasePrice: {
@@ -68,14 +74,6 @@ const GameSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'Usuario',
         required: true
-    },
-    brand: {
-        type: Schema.Types.ObjectId,
-        ref: 'Brand'
-    },
-    platform: {
-        type: Schema.Types.ObjectId,
-        ref: 'Platform',
     },
     console: {
         type: Schema.Types.ObjectId,
