@@ -5,7 +5,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
-const { getCollection, getCollectionOne, updateCollection, createCollection, deleteCollection } = require('../controllers/Collection');
+const { getCollection, getCollectionOne, updateCollection, createCollection, deleteCollection } = require('../controllers/collection');
 
 const { 
     validarJWT, 
