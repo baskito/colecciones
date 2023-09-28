@@ -1,5 +1,6 @@
 const { response } = require('express');
 const Accesorio = require('../models/accesorio');
+const { getConsole } = require('./console');
 const ObjectID = require("mongodb").ObjectId;
 
 const getAccesorio = async (req, res = response) => {
@@ -22,6 +23,54 @@ const getAccesorio = async (req, res = response) => {
         accesorios,
         total: total.length
     });
+}
+
+const getAccesorioByConsole = async (req, res = response) => {
+
+    const from = Number(req.query.from) || 0;
+    const id = req.params.id;
+
+    try {
+
+        if (!ObjectID.isValid(id)) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'El id de la consola no es válido'
+            });
+        }
+
+        // const console = await getConsoleAcc( id );
+        
+        // if (!console) {
+        //     return res.status(404).json({
+        //         ok: false,
+        //         msg: 'Consola no encontrado por id'
+        //     });
+        // }
+
+        const [ accesorios, total ] = await Promise.all([
+            Accesorio.find({console: id})
+                .populate('usuario', 'nombre email img')
+                .populate('console', 'name model brand img1')
+                .skip( from )
+                .limit( 10 ),
+    
+                Accesorio.find({console: id})
+        ]);
+
+        res.json({
+            ok: true,
+            accesorios,
+            total: total.length
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error en el servidor, consulte con le administrador'
+        });
+    }
 }
 
 const getAccesorioOne = async (req, res = response) => {
@@ -175,6 +224,7 @@ const deleteAccesorio = async (req, res = response) => {
 
 module.exports = {
     getAccesorio,
+    getAccesorioByConsole,
     getAccesorioOne,
     updateAccesorio,
     createAccesorio,

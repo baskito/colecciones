@@ -5,7 +5,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
-const { getAccesorio, updateAccesorio, createAccesorio, deleteAccesorio, getAccesorioOne } = require('../controllers/accesorio');
+const { getAccesorio, updateAccesorio, createAccesorio, deleteAccesorio, getAccesorioOne, getAccesorioByConsole } = require('../controllers/accesorio');
 
 const { 
     validarJWT, 
@@ -18,6 +18,8 @@ const router = Router();
 
 
 router.get( '/', validarJWT , getAccesorio );
+
+router.get( '/console/:id', validarJWT , getAccesorioByConsole );
 
 router.get( '/:id', validarJWT , getAccesorioOne );
 
