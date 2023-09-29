@@ -5,7 +5,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
-const { getConsole, updateConsole, createConsole, deleteConsole, getConsoleAcc } = require('../controllers/console');
+const { getConsole, updateConsole, createConsole, deleteConsole, getConsoleAcc, getConsoleOne } = require('../controllers/console');
 
 const { 
     validarJWT, 
@@ -20,6 +20,8 @@ const router = Router();
 router.get( '/', validarJWT , getConsole );
 
 router.get( '/all', validarJWT , getConsoleAcc );
+
+router.get( '/:id', validarJWT , getConsoleOne );
 
 router.post( '/',
     [

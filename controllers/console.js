@@ -38,6 +38,41 @@ const getConsoleAcc = async (req, res = response) => {
     });
 }
 
+const getConsoleOne = async (req, res = response) => {
+
+    const id = req.params.id;
+    try {
+
+        if (!ObjectID.isValid(id)) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'El id de la consola no es válido'
+            });
+        }
+
+        const console = await Console.findById( id );
+        
+        if (!console) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Consola no encontrada por id'
+            });
+        }
+
+        res.json({
+            ok: true,
+            console
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error en el servidor, consulte con le administrador'
+        });
+    }
+}
+
 const updateConsole = async (req, res = response) => {
 
     const id = req.params.id;
@@ -133,6 +168,7 @@ const deleteConsole = async (req, res = response) => {
 module.exports = {
     getConsole,
     getConsoleAcc,
+    getConsoleOne,
     updateConsole,
     createConsole,
     deleteConsole
